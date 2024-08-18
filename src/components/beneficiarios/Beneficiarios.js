@@ -2,24 +2,59 @@ import React, { useState, useEffect } from "react";
 import {
   Avatar,
   List,
-  Input,
   Button,
   message,
   Modal,
   Form,
+  Input,
   Upload,
+  Tabs,
+  Card,
+  Tooltip,
+  Typography,
+  Space,
+  Row,
+  Col
 } from "antd";
 import {
   EyeOutlined,
   DeleteOutlined,
   PlusOutlined,
   UploadOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import clienteAxios from "../../config/axios";
 import VerBeneficiario from "./VerBeneficiario";
 import Swal from "sweetalert2";
+import SearchBar from "../Searchbar/SearchBar";
+import styled from "styled-components";
+
+const { TabPane } = Tabs;
+const { Title } = Typography;
+
+// Estilos personalizados para los componentes
+const StyledCard = styled(Card)`
+  margin-bottom: 16px;
+  .ant-card-head-title {
+    font-weight: bold;
+  }
+`;
+
+const ResponsiveRow = styled(Row)`
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const ResponsiveCol = styled(Col)`
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+`;
 
 const Beneficiarios = () => {
+  // Estados para manejar la búsqueda, lista de beneficiarios, modal y subida de archivos
   const [searchText, setSearchText] = useState("");
   const [personas, guardarPersonas] = useState([]);
   const [selectedPersona, setSelectedPersona] = useState(null);
@@ -27,10 +62,12 @@ const Beneficiarios = () => {
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
 
+  // Filtrar beneficiarios basados en el texto de búsqueda
   const filteredData = personas.filter((item) =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  // Función para obtener la lista de beneficiarios desde la API
   const consultarAPI = async () => {
     try {
       const personasConsulta = await clienteAxios.get("/personas");
@@ -40,14 +77,17 @@ const Beneficiarios = () => {
     }
   };
 
+  // Efecto para cargar los beneficiarios al montar el componente
   useEffect(() => {
     consultarAPI();
   }, []);
 
+  // Función para ver los detalles de un beneficiario
   const verBeneficiario = (persona) => {
     setSelectedPersona(persona);
   };
 
+  // Función para confirmar y ejecutar la eliminación de un beneficiario
   const confirmarEliminacion = (id) => {
     Swal.fire({
       title: "¿Estás seguro?",
@@ -72,6 +112,7 @@ const Beneficiarios = () => {
     });
   };
 
+  // Función para crear un nuevo beneficiario
   const handleCreateBeneficiario = async (values) => {
     const formData = new FormData();
     for (const key in values) {
@@ -100,10 +141,12 @@ const Beneficiarios = () => {
     }
   };
 
+  // Función para manejar cambios en la subida de archivos
   const handleUploadChange = ({ fileList }) => {
     setFileList(fileList);
   };
 
+  // Renderizar el componente VerBeneficiario si se ha seleccionado una persona
   if (selectedPersona) {
     return (
       <VerBeneficiario
@@ -116,155 +159,165 @@ const Beneficiarios = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <h2>Total: {personas.length}</h2>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setModalVisible(true)}
-          style={{ whiteSpace: "nowrap", width: "200px" }}
-        >
-          Nuevo beneficiario
-        </Button>
-      </div>
-      <div style={{ display: "flex", marginBottom: 16 }}>
-        <Input.Search
-          placeholder="Buscar por nombre"
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ marginRight: 16 }}
-        />
-      </div>
-      <div
-        style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}
-      ></div>
-      <List
-        pagination={{
-          position: "bottom",
-          align: "center",
-          total: filteredData.length,
-          pageSize: 5,
-          hideOnSinglePage: true,
-        }}
-        dataSource={filteredData}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              <Button
-                type="primary"
-                icon={<EyeOutlined />}
-                onClick={() => verBeneficiario(item)}
-              />,
-              <Button
-                type="danger"
-                icon={<DeleteOutlined />}
-                onClick={() => confirmarEliminacion(item._id)}
-              />,
-            ]}
+      {/* Encabezado con título y botón para crear nuevo beneficiario */}
+      <ResponsiveRow justify="space-between" align="middle" style={{ marginBottom: 16 }}>
+        <ResponsiveCol>
+          <Title level={4}>Beneficiarios: {personas.length}</Title>
+        </ResponsiveCol>
+        <ResponsiveCol style={{ textAlign: "right" }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setModalVisible(true)}
           >
-            <List.Item.Meta
-              avatar={
-                item.imagen ? (
-                  <Avatar
-                    src={`${clienteAxios.defaults.baseURL}/uploads/${item.imagen}`}
-                  />
-                ) : (
-                  <Avatar
-                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${item.nombre}`}
-                  />
-                )
-              }
-              title={item.nombre}
-              description={`Dirección: ${item.direccion}, Teléfono: ${item.telefono}`}
-            />
-          </List.Item>
-        )}
+            Nuevo beneficiario
+          </Button>
+        </ResponsiveCol>
+      </ResponsiveRow>
+
+      {/* Barra de búsqueda */}
+      <SearchBar
+        placeholder="Buscar beneficiario"
+        onChange={(e) => setSearchText(e.target.value)}
       />
+
+      {/* Tabs para mostrar la lista de beneficiarios */}
+      <Tabs defaultActiveKey="1">
+        <TabPane
+          tab={
+            <span>
+              <UnorderedListOutlined />
+               Lista de Beneficiarios
+            </span>
+          }
+          key="1"
+        >
+          {/* Lista de beneficiarios */}
+          <List
+            grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 3 }}
+            dataSource={filteredData}
+            renderItem={(item) => (
+              <List.Item>
+                <StyledCard
+                  title={item.nombre}
+                  extra={
+                    <>
+                      <Tooltip title="Ver Detalles">
+                        <Button
+                          type="link"
+                          icon={<EyeOutlined />}
+                          onClick={() => verBeneficiario(item)}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Eliminar Beneficiario">
+                        <Button
+                          type="link"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => confirmarEliminacion(item._id)}
+                        />
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  <Avatar
+                    size={64}
+                    src={
+                      item.imagen
+                        ? `${clienteAxios.defaults.baseURL}/uploads/${item.imagen}`
+                        : `https://api.dicebear.com/7.x/miniavs/svg?seed=${item.nombre}`
+                    }
+                    style={{ marginBottom: 16 }}
+                  />
+                  <p>CUI: {item.cui}</p>
+                  <p>Teléfono: {item.telefono}</p>
+                  <p>Dirección: {item.direccion}</p>
+                </StyledCard>
+              </List.Item>
+            )}
+          />
+        </TabPane>
+      </Tabs>
+
+      {/* Modal para crear nuevo beneficiario */}
       <Modal
         visible={modalVisible}
         title="Ingresar nuevo beneficiario"
         onCancel={() => setModalVisible(false)}
         footer={[
-          <Button
-            key="cancel"
-            onClick={() => setModalVisible(false)}
-            style={{ width: "100px" }}
-          >
-            Cancelar
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={() => form.submit()}
-            style={{ width: "100px" }}
-          >
-            Guardar
-          </Button>,
+          <Space>
+            <Button key="cancel" onClick={() => setModalVisible(false)}>
+              Cancelar
+            </Button>,
+            <Button key="submit" type="primary" onClick={() => form.submit()}>
+              Guardar
+            </Button>
+          </Space>
         ]}
       >
         <Form form={form} layout="vertical" onFinish={handleCreateBeneficiario}>
-          <Form.Item
-            name="nombre"
-            label="Nombre"
-            rules={[{ required: true, message: "Por favor ingrese el nombre" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="cui"
-            label="CUI"
-            rules={[{ required: true, message: "Por favor ingrese el CUI" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="padre" label="Padre">
-            <Input />
-          </Form.Item>
-          <Form.Item name="madre" label="Madre">
-            <Input />
-          </Form.Item>
-          <Form.Item name="telefono" label="Teléfono">
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="telefonoContacto"
-            label="Teléfono de Contacto"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingrese el teléfono de contacto",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="direccion"
-            label="Dirección"
-            rules={[
-              { required: true, message: "Por favor ingrese la dirección" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="fechaNacimiento"
-            label="Fecha de Nacimiento"
-            rules={[
-              {
-                required: true,
-                message: "Por favor ingrese la fecha de nacimiento",
-              },
-            ]}
-          >
-            <Input type="date" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="nombre"
+                label="Nombre"
+                rules={[{ required: true, message: "Por favor ingrese el nombre" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="cui"
+                label="CUI"
+                rules={[{ required: true, message: "Por favor ingrese el CUI" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item name="padre" label="Padre">
+                <Input />
+              </Form.Item>
+              <Form.Item name="madre" label="Madre">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="telefono" label="Teléfono">
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="telefonoContacto"
+                label="Teléfono de Contacto"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor ingrese el teléfono de contacto",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="direccion"
+                label="Dirección"
+                rules={[
+                  { required: true, message: "Por favor ingrese la dirección" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="fechaNacimiento"
+                label="Fecha de Nacimiento"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor ingrese la fecha de nacimiento",
+                  },
+                ]}
+              >
+                <Input type="date" />
+              </Form.Item>
+            </Col>
+          </Row>
           <Form.Item name="imagen" label="Imagen">
             <Upload
               listType="picture"
