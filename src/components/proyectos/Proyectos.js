@@ -11,8 +11,6 @@ import {
   Col,
   Tabs,
   Card,
-  Tag,
-  Tooltip,
   Typography,
   Space,
 } from "antd";
@@ -26,6 +24,8 @@ import clienteAxios from "../../config/axios";
 import VerProyecto from "./VerProyecto";
 import moment from "moment";
 import styled from "styled-components";
+import SearchBar from "../Searchbar/SearchBar";
+
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -37,11 +37,6 @@ const StyledCard = styled(Card)`
   .ant-card-head-title {
     font-weight: bold;
   }
-`;
-
-const StyledTag = styled(Tag)`
-  margin-right: 8px;
-  margin-bottom: 4px;
 `;
 
 const ResponsiveRow = styled(Row)`
@@ -136,11 +131,11 @@ const Proyectos = () => {
   if (!selectedProyecto) {
     return (
       <>
-      <ResponsiveRow justify="space-between" align="middle" style={{ marginBottom: 16 }}>
-        <ResponsiveCol>
-          <Title level={4}>Proyectos: {proyectos.length}</Title>
-        </ResponsiveCol>
-          <ResponsiveCol  style={{ textAlign: "right" }}>
+        <ResponsiveRow justify="space-between" align="middle" style={{ marginBottom: 16 }}>
+          <ResponsiveCol>
+            <Title level={4}>Proyectos: {proyectos.length}</Title>
+          </ResponsiveCol>
+          <ResponsiveCol style={{ textAlign: "right" }}>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -149,13 +144,11 @@ const Proyectos = () => {
               Nuevo proyecto
             </Button>
           </ResponsiveCol>
-      </ResponsiveRow>
+        </ResponsiveRow>
 
-
-        <Input.Search
+        <SearchBar
           placeholder="Buscar proyecto"
           onChange={(e) => setSearchText(e.target.value)}
-          style={{ marginBottom: 16 }}
         />
 
         <Tabs defaultActiveKey="1">
