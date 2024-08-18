@@ -11,6 +11,7 @@ import {
   Col,
   Tabs,
   Card,
+  Tooltip,
   Typography,
   Space,
 } from "antd";
@@ -161,38 +162,42 @@ const Proyectos = () => {
             }
             key="1"
         >
-            <List
-              grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 3 }}
-              dataSource={filteredData}
-              renderItem={(item) => (
-                <List.Item>
-                  <StyledCard
-                    title={item.nombre}
-                    extra={
-                      <>
+          <List
+            grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 3 }}
+            dataSource={filteredData}
+            renderItem={(item) => (
+              <List.Item>
+                <StyledCard
+                  title={item.nombre}
+                  extra={
+                    <>
+                      <Tooltip title="Ver Detalles">
                         <Button
                           type="link"
                           icon={<EyeOutlined />}
                           onClick={() => setSelectedProyecto(item)}
                         />
+                      </Tooltip>
+                      <Tooltip title="Eliminar Proyecto">
                         <Button
                           type="link"
                           danger
                           icon={<DeleteOutlined />}
                           onClick={() => confirmarEliminacion(item._id)}
                         />
-                      </>
-                    }
-                  >
-                    <p>Inicio: {moment(item.fechaInicio).format("DD/MM/YYYY")}</p>
-                    <p>Fin: {moment(item.fechaFin).format("DD/MM/YYYY")}</p>
-                    <p>Área: {item.areaCobertura}</p>
-                  </StyledCard>
-                </List.Item>
-              )}
-            />
-          </TabPane>
-        </Tabs>
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  <p>Inicio: {moment(item.fechaInicio).format("DD/MM/YYYY")}</p>
+                  <p>Fin: {moment(item.fechaFin).format("DD/MM/YYYY")}</p>
+                  <p>Área: {item.areaCobertura}</p>
+                </StyledCard>
+              </List.Item>
+            )}
+          />
+        </TabPane>
+      </Tabs>
 
         {/* Modal para crear nuevo proyecto */}
         <Modal
