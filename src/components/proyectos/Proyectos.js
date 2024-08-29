@@ -27,7 +27,6 @@ import moment from "moment";
 import styled from "styled-components";
 import SearchBar from "../Searchbar/SearchBar";
 
-
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { Title } = Typography;	
@@ -51,7 +50,7 @@ const ResponsiveCol = styled(Col)`
     with: 100%;
     margin-bottom: 16px;
   }
-  `;
+`;
 
 const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
@@ -126,6 +125,15 @@ const Proyectos = () => {
       console.error("Error al crear el proyecto", error);
       message.error("No se pudo crear el proyecto");
     }
+  };
+
+  // Validar fechas
+  const validateDates = (_, value) => {
+    const startDate = form.getFieldValue("fechaInicio");
+    if (value && startDate && moment(value).isSameOrBefore(startDate, "day")) {
+      return Promise.reject(new Error("La fecha de fin debe ser posterior a la fecha de inicio"));
+    }
+    return Promise.resolve();
   };
 
   // Renderizar la vista principal si no hay proyecto seleccionado
@@ -235,7 +243,10 @@ const Proyectos = () => {
                 <Form.Item
                   name="fechaFin"
                   label="Fecha de Fin"
-                  rules={[{ required: true, message: "Seleccione la fecha de fin" }]}
+                  rules={[
+                    { required: true, message: "Seleccione la fecha de fin" },
+                    { validator: validateDates },
+                  ]}
                 >
                   <Input type="date" />
                 </Form.Item>

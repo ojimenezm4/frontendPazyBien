@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import clienteAxios from "../../config/axios";
 import { jwtDecode } from "jwt-decode"; // Importar correctamente como una exportación nombrada
@@ -29,30 +28,18 @@ function Login() {
     try {
       const respuesta = await clienteAxios.post("/login", credenciales);
       const { token } = respuesta.data;
-      const decodedToken = jwtDecode(token); // Decodificar el token
+      const decodedToken = jwtDecode(token);
       localStorage.setItem("token", token);
       localStorage.setItem("usuario", JSON.stringify(decodedToken));
 
-      Swal.fire({
-        title: "Haz Iniciado sesión correctamente",
-        text: `Bienvenido, ${decodedToken.nombre}`,
-        icon: "success",
-      });
+      message.success(`Bienvenido, ${decodedToken.nombre}`);
 
       navigate("/dashboard");
     } catch (error) {
       if (error.response) {
-        Swal.fire({
-          icon: "error",
-          title: "Hubo un error",
-          text: error.response?.data?.mensaje || "Error al iniciar sesión",
-        });
+        message.error(error.response?.data?.mensaje || "Error al iniciar sesión");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Hubo un error",
-          text: "Hubo un error",
-        });
+        message.error("Hubo un error");
       }
     }
   };
@@ -63,6 +50,7 @@ function Login() {
       [e.target.name]: e.target.value,
     });
   };
+
 
   return (
     <div className="login-container">
