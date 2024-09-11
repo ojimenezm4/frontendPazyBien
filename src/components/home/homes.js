@@ -7,6 +7,7 @@ import Gallery from './frame/gallery';
 import Footer from './frame/footer'
 import BestFeatures from './frame/bestfeatures'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 function Homes() {

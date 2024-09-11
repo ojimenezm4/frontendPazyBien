@@ -1,0 +1,25 @@
+.icon-container {
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+  
+  .icon-container i {
+    font-size: 2rem; /* Ajusta el tamaño del ícono */
+    color: #007bff;
+    transition: color 0.3s ease;
+  }
+  
+  .icon-container:hover {
+    background-color: #007bff;
+  }
+  
+  .icon-container:hover i {
+    color: #ffffff;
+  }
