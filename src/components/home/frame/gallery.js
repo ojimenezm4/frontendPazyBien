@@ -1,95 +1,62 @@
 import React from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'font-awesome/css/font-awesome.min.css';
 
 function Gallery() {
   return (
-    <section id="gallery">
-      {/* Heading */}
-      <h2 className="mb-3 font-weight-bold text-center">Trabajo Social</h2>
+    <section id="gallery" style={{ backgroundColor: '#f8f9fa', padding: '4rem 0' }}>
+      <div className="container">
+        <h2 className="font-weight-bold text-center mb-5 text-primary">Trabajo Social</h2>
 
-      {/* Grid row */}
-      <div className="row">
-        {/* Grid column for carousel */}
-        <div className="col-md-6 mb-4">
-          {/* Carousel Wrapper */}
-          <div id="carousel-example-1z" className="carousel slide carousel-fade" data-ride="carousel">
-            {/* Indicators */}
-            <ol className="carousel-indicators">
-              <li data-target="#carousel-example-1z" data-slide-to="0" className="active"></li>
-              <li data-target="#carousel-example-1z" data-slide-to="1"></li>
-              <li data-target="#carousel-example-1z" data-slide-to="2"></li>
-            </ol>
-            {/* Slides */}
-            <div className="carousel-inner z-depth-1-half" role="listbox">
-              {/* First slide */}
-              <div className="carousel-item active">
-                <img
-                  className="d-block w-100"
-                  src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-1-1024x683.jpg"
-                  alt="First slide"
-                />
+        <div className="row">
+          {/* Carousel Column */}
+          <div className="col-md-6 mb-4">
+            <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
+              {/* Indicators */}
+              <div className="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
               </div>
-              {/* Second slide */}
-              <div className="carousel-item">
-                <img
-                  className="d-block w-100"
-                  src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-4-scaled.jpg"
-                  alt="Second slide"
-                />
+              {/* Slides */}
+              <div className="carousel-inner">
+                <div className="carousel-item active">
+                  <img src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-1-1024x683.jpg" className="d-block w-100" alt="Trabajo Social 1" />
+                </div>
+                <div className="carousel-item">
+                  <img src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-4-scaled.jpg" className="d-block w-100" alt="Trabajo Social 2" />
+                </div>
+                <div className="carousel-item">
+                  <img src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-2-scaled.jpg" className="d-block w-100" alt="Trabajo Social 3" />
+                </div>
               </div>
-              {/* Third slide */}
-              <div className="carousel-item">
-                <img
-                  className="d-block w-100"
-                  src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Trabajo-Social-2-scaled.jpg"
-                  alt="Third slide"
-                />
-              </div>
+              {/* Controls */}
+              <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
+              </button>
+              <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
+              </button>
             </div>
-            {/* Controls */}
-            <a
-              className="carousel-control-prev"
-              href="#carousel-example-1z"
-              role="button"
-              data-slide="prev"
-            >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="sr-only">Previous</span>
-            </a>
-            <a
-              className="carousel-control-next"
-              href="#carousel-example-1z"
-              role="button"
-              data-slide="next"
-            >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="sr-only">Next</span>
-            </a>
           </div>
-          {/* Carousel Wrapper */}
-        </div>
-        {/* Grid column for text */}
-        <div className="col-md-6 mb-4">
-          <div className="col-md-6">
-            {/* Excerpt */}
-            <span className="teal-text">
-              <h6 className="pb-1">
-                <i className="fa fa-heart"></i>
-                <strong> 8,250 personas beneficiadas</strong>
+
+          {/* Text Column */}
+          <div className="col-md-6 mb-4 d-flex flex-column justify-content-center">
+            <div className="bg-white p-4 rounded shadow-sm">
+              <h6 className="text-muted mb-3">
+                <span className="badge bg-success">8,250 personas beneficiadas</span>
               </h6>
-            </span>
-            <p>
-              En Paz y Bien, seguimos apoyando a las personas más vulnerables que acuden a nuestras instalaciones en busca de ayuda. Nuestro compromiso se manifiesta a través de programas que ofrecen desde alimentos hasta atención médica. Muchas de estas personas llegan con lo mínimo, a veces solo con el pasaje, e incluso sin haber desayunado.
-            </p>
-            <p>
-              Es en estos momentos cuando nuestro lema se hace realidad, y nuestra trabajadora social, con dedicación y empatía, escucha sus necesidades y les brinda el apoyo necesario.
-            </p>
-            {/* <a className="btn btn-primary btn-md">Read more</a> */}
+              <p className="text-muted mb-3">
+                En Paz y Bien, seguimos apoyando a las personas más vulnerables que acuden a nuestras instalaciones en busca de ayuda. Nuestro compromiso se manifiesta a través de programas que ofrecen desde alimentos hasta atención médica. Muchas de estas personas llegan con lo mínimo, a veces solo con el pasaje, e incluso sin haber desayunado.
+              </p>
+              <p className="text-muted">
+                Es en estos momentos cuando nuestro lema se hace realidad, y nuestra trabajadora social, con dedicación y empatía, escucha sus necesidades y les brinda el apoyo necesario.
+              </p>
+              {/* <a className="btn btn-primary btn-md" href="#">Leer más</a> */}
+            </div>
           </div>
         </div>
       </div>
-      {/* Grid row */}
     </section>
   );
 }

@@ -8,7 +8,7 @@ import Footer from './frame/footer'
 import BestFeatures from './frame/bestfeatures'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 function Homes() {
   return (
