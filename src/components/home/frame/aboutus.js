@@ -1,5 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';  // Asegúrate de importar Bootstrap
 
 function AboutUs() {
   return (

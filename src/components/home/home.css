@@ -11,7 +11,7 @@
   }
   
   .icon-container i {
-    font-size: 2rem; /* Ajusta el tamaño del ícono */
+    font-size: 2rem;
     color: #007bff;
     transition: color 0.3s ease;
   }
@@ -22,4 +22,7 @@
   
   .icon-container:hover i {
     color: #ffffff;
+  }
+  section#best-features {
+    overflow-x: hidden;
   }
