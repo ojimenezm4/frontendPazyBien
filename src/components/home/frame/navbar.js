@@ -1,5 +1,5 @@
 import React from 'react';
-
+import logo from '../../../img/pazybien.png';  
 function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -52,7 +52,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  );  
 }
 
 export default Navbar;

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-5 bg-light">
+    <section id="contact" className="py-5">
       <div className="container">
         {/* Heading */}
         <h2 className="mb-5 text-center fw-bold">Contacto</h2>
@@ -40,7 +40,7 @@ const Contact = () => {
 
           {/* Info column */}
           <div className="col-lg-6">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-body">
                 <div className="row text-center">
                   {/* Grid column */}

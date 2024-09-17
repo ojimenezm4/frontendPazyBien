@@ -1,5 +1,6 @@
 import React from 'react';
-import backgroundImage from '../../../img/background_A.jpg';  // Ajusta la ruta de la imagen si es necesario
+import backgroundImage from '../../../img/background_A.jpg';  // Imagen de fondo
+import logoImage from '../../../img/pazybienwhite.png';  // Imagen encima del fondo
 
 function Header() {
   const headerStyle = {
@@ -18,19 +19,31 @@ function Header() {
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Ajusta la opacidad según tus necesidades
-    zIndex: 1  // Coloca la superposición sobre la imagen
+    zIndex: 1
   };
 
   const contentStyle = {
     position: 'relative',
-    zIndex: 2,  // Coloca el contenido sobre la superposición
+    zIndex: 2,
     color: 'white'
+  };
+
+  const logoStyle = {
+    position: 'absolute',
+    top: '17%',  // Ajusta la posición vertical
+    left: '50%',
+    transform: 'translateX(-50%)',  // Centra horizontalmente
+    width: '15rem',  // Ajusta el tamaño de la imagen
+    zIndex: 3  // Coloca el logo sobre la máscara y el fondo
   };
 
   return (
     <header style={headerStyle}>
       {/* Máscara oscura */}
       <div style={overlayStyle}></div>
+
+      {/* Imagen del logo */}
+      {/* <img src={logoImage} alt="Logo Paz y Bien" style={logoStyle} /> */}
 
       {/* Contenido */}
       <div className="container d-flex align-items-center justify-content-center h-100">

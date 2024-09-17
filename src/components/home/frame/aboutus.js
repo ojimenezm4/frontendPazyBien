@@ -4,22 +4,25 @@ function AboutUs() {
   return (
     <section id="aboutus" style={{ backgroundColor: '#f8f9fa', padding: '4rem 0' }}>
       <div className="container">
-        <div className="row">
-          <div className="col-lg-6 mb-4 mb-lg-0">
+        <h2 className="font-weight-bold text-center mb-5 text-primary">Coordinación de Programas y Proyectos</h2>
+        <div className="row align-items-center">
+          <div className="col-lg-6 mb-4">
             <div className="p-4 bg-white rounded shadow-sm">
-              <h3 className="font-weight-bold text-primary mb-3">Misión</h3>
+              <p className="text-muted mb-4">
+                En Paz y Bien nos dedicamos a mejorar la atención de las personas más necesitadas en el departamento de Chiquimula. Con este objetivo en mente, hemos creado la Oficina de Coordinación de Programas y Proyectos, la cual trabaja en estrecha colaboración con diversas entidades locales e internacionales. Actualmente, mantenemos convenios con las municipalidades de San Jacinto y Camotán, además de tener presencia activa en los municipios de Jocotán, Ipala, Esquipulas, Olopa y Concepción Las Minas.
+              </p>
               <p className="text-muted">
-                Mejorar la calidad de vida de las personas con discapacidad intelectual, menores, mayores y grupos de exclusión social, y beneficiarios de las actuaciones de cooperación internacional, teniendo siempre como principio y fin a las personas receptoras de nuestros servicios.
+                Gracias a nuestras alianzas con cooperantes internacionales, como las agencias de cooperación de la Administración Española, y en coordinación con nuestra oficina de Proyectos de Paz y Bien ONGD en España, hemos logrado expandir nuestro impacto en la región.
               </p>
             </div>
           </div>
-          <div className="col-lg-6">
-            <div className="p-4 bg-white rounded shadow-sm">
-              <h3 className="font-weight-bold text-primary mb-3">Visión</h3>
-              <p className="text-muted">
-                Acompañar a las personas en su ciclo vital, acometiendo el futuro con proyectos de mejora continua e inclusión social, y teniendo siempre las prestaciones de servicios que se vayan etiquetando por su excelencia. Estar a disposición permanente de abordar nuevas demandas sociales.
-              </p>
-            </div>
+          <div className="col-lg-6 mb-4">
+            <img
+              src="https://pazbienguatemala.org/wp-content/uploads/2022/05/Coordinacion-de-Proyectos-2-e1652774016200-scaled.jpg"
+              className="img-fluid rounded shadow-sm"
+              alt="Coordinación de Programas y Proyectos"
+              style={{ maxHeight: '100%', objectFit: 'cover' }}
+            />
           </div>
         </div>
       </div>
