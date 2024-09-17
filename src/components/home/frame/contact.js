@@ -31,6 +31,9 @@ const Contact = () => {
               <a href="tel:+50278239999" className="btn btn-primary btn-lg">
                 <i className="bi bi-telephone me-2"></i> +502 7823-9999
               </a>
+              <a href="mailto:comunicacionguate@pazbien.org" className="btn btn-primary btn-lg">
+                <i className="bi bi-envelope me-2"></i> comunicacionguate@pazbien.org
+              </a>
             </div>
           </div>
           {/* /.Form column */}
@@ -41,27 +44,21 @@ const Contact = () => {
               <div className="card-body">
                 <div className="row text-center">
                   {/* Grid column */}
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-6 mb-3">
                     <p className="mb-1">
                       <i className="bi bi-geo-alt-fill text-primary" style={{ fontSize: '2rem' }}></i>
                     </p>
                     <p className="fw-bold">Quezaltepeque, Chiquimula</p>
+                    <p className="text-muted">4ª. Calle 1-10, zona 2, Barrio la Concordia</p>
                   </div>
                   {/* Grid column */}
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-6 mb-3">
                     <p className="mb-1">
                       <i className="bi bi-clock-fill text-primary" style={{ fontSize: '2rem' }}></i>
                     </p>
-                    <p className="fw-bold">Lunes a Viernes, 8:00-18:00</p>
+                    <p className="fw-bold">Lunes a Viernes</p>
+                    <p className='text-muted'>8:00 AM - 6:00 PM</p>
                   </div>
-                  {/* Grid column */}
-                  <div className="col-md-4 mb-3">
-                    <p className="mb-1">
-                      <i className="bi bi-telephone-fill text-primary" style={{ fontSize: '2rem' }}></i>
-                    </p>
-                    <p className="fw-bold">+502 7823-9999</p>
-                  </div>
-                  {/* Grid column */}
                 </div>
               </div>
             </div>
