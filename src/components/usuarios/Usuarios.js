@@ -10,7 +10,12 @@ import {
   Typography,
   Row,
   Col,
-  Pagination
+  Pagination,
+  Form,
+  Input,
+  Upload,
+  Select,
+  Space,
 } from "antd";
 import {
   PlusOutlined,
@@ -18,17 +23,21 @@ import {
   ExclamationCircleOutlined,
   UndoOutlined,
   UnorderedListOutlined,
+  EditOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import clienteAxios from "../../config/axios";
 import Signin from "../signin/Signin";
 import SearchBar from "../Searchbar/SearchBar";
 import styled from "styled-components";
+import Swal from 'sweetalert2';
+
+
 
 const { confirm } = Modal;
 const { TabPane } = Tabs;
 const { Title } = Typography;
 
-// Estilos personalizados para los componentes
 const StyledCard = styled(Card)`
   margin-bottom: 16px;
   .ant-card-head-title {
@@ -49,7 +58,6 @@ const ResponsiveCol = styled(Col)`
   }
 `;
 
-// Estilo personalizado para el botón de eliminar/restaurar usuario
 const StyledButton = styled(Button)`
   &.ant-btn-danger {
     background-color: #ff4d4f;
@@ -71,7 +79,6 @@ const StyledButton = styled(Button)`
   }
 `;
 
-// Estilo personalizado para la paginación
 const StyledPagination = styled(Pagination)`
   display: flex;
   align-items: center;
@@ -105,16 +112,45 @@ const StyledPagination = styled(Pagination)`
   }
 `;
 
-// Componente principal de Usuarios
+const GreenButton = styled(Button)`
+  background-color: blue;  // Un tono de verde
+  border-color: #4CAF50;
+  color: white;
+
+  &:hover, &:focus {
+    background-color: #45a049;  // Un verde un poco más oscuro para el hover
+    border-color: #45a049;
+  }
+`;
+
+
 const Usuarios = ({ activos, rol }) => {
-  // Estados para manejar la búsqueda, lista de usuarios, modal y paginación
   const [searchText, setSearchText] = useState("");
   const [usuarios, guardarUsuarios] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6; // Número de usuarios por página
+  const [fileList, setFileList] = useState([]);
+  const pageSize = 6;
 
-  // Filtrar y ordenar la lista de usuarios
+  const [form] = Form.useForm();
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const showEditModal = (user) => {
+    setSelectedUser(user); // Actualiza el usuario seleccionado
+    setEditModalVisible(true); // Muestra el modal
+  };
+
+  useEffect(() => {
+    if (selectedUser && editModalVisible) {
+      form.setFieldsValue({
+        nombre: selectedUser.nombre,
+        email: selectedUser.email,
+        rol: selectedUser.rol,
+      });
+    }
+  }, [selectedUser, editModalVisible, form]);
+
   const filteredData = usuarios
     .filter((item) =>
       item.nombre.toLowerCase().includes(searchText.toLowerCase())
@@ -122,7 +158,6 @@ const Usuarios = ({ activos, rol }) => {
     .filter((item) => (rol === "super" ? true : item.rol !== "super"))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // Función para consultar la API y obtener la lista de usuarios
   const consultarAPI = useCallback(async () => {
     try {
       const ruta = activos ? "/usuarios" : "/usuarios/inactivos";
@@ -133,26 +168,55 @@ const Usuarios = ({ activos, rol }) => {
     }
   }, [activos]);
 
-  // Efecto para cargar los usuarios al montar el componente
   useEffect(() => {
     consultarAPI();
   }, [consultarAPI]);
 
-  // Funciones para manejar la visibilidad del modal
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
 
-  // Función para eliminar un usuario
-  const eliminarUsuario = async (id) => {
-    try {
-      await clienteAxios.delete(`/usuarios/${id}`);
-      consultarAPI();
-    } catch (error) {
-      console.error("Error al eliminar el usuario", error);
-    }
+  const hideEditModal = () => {
+    setEditModalVisible(false);
+    setFileList([]);
   };
 
-  // Función para restaurar un usuario
+    // Obtener la lista de usuarios
+    const cargarUsuarios = useCallback(async () => {
+      try {
+        const response = await clienteAxios.get(activos ? "/usuarios" : "/usuarios/inactivos");
+        guardarUsuarios(response.data);
+      } catch (error) {
+        console.error("Error al consultar la API", error);
+      }
+    }, [activos]);
+  
+    useEffect(() => {
+      cargarUsuarios();
+    }, [cargarUsuarios]);
+
+  // Ejemplo de función para eliminar un usuario
+  const eliminarUsuario = async (id) => {
+    try {
+      const response = await clienteAxios.delete(`/usuarios/${id}`);
+      Swal.fire({
+        title: 'Eliminado!',
+        text: response.data.message,
+        icon: 'success'
+      }).then(result => {
+        if (result.isConfirmed) {
+          cargarUsuarios(); // Recargar la lista de usuarios después de la eliminación
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: error.response.data.message,
+        icon: 'error'
+      });
+    }
+  };
+  
+
   const restaurarUsuario = async (id) => {
     try {
       await clienteAxios.put(`/usuarios/${id}`, { activo: true });
@@ -162,7 +226,6 @@ const Usuarios = ({ activos, rol }) => {
     }
   };
 
-  // Función para mostrar el modal de confirmación
   const showConfirm = (id, nombre) => {
     const action = activos ? "eliminar" : "restaurar";
     const title = `¿Estás seguro de ${action} a ${nombre}?`;
@@ -193,14 +256,43 @@ const Usuarios = ({ activos, rol }) => {
     });
   };
 
-  // Función para manejar el cambio de página
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
+  // Función para manejar la edición de usuario
+  const handleEditUser = async (values) => {
+    try {
+      console.log("Enviando datos al servidor:", values);
+      const formData = new FormData();
+      formData.append("nombre", values.nombre);
+      formData.append("email", values.email);
+      formData.append("rol", values.rol);
+      if (fileList.length > 0) {
+        formData.append("fotoPerfil", fileList[0].originFileObj);
+      }
+  
+      const response = await clienteAxios.put(`/usuarios/${selectedUser._id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Respuesta de la API después de actualizar:", response);
+      consultarAPI(); // Actualiza la lista de usuarios
+      hideEditModal();
+    } catch (error) {
+      console.error("Error al editar el usuario:", error.response || error);
+    }
+  };
+  
+
+  const handleFileChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+  
+
   return (
     <>
-      {/* Encabezado con título y botón para crear nuevo usuario */}
       <ResponsiveRow justify="space-between" align="middle" style={{ marginBottom: 16 }}>
         <ResponsiveCol>
           <Title level={4}>Usuarios: {filteredData.length}</Title>
@@ -218,13 +310,11 @@ const Usuarios = ({ activos, rol }) => {
         </ResponsiveCol>
       </ResponsiveRow>
 
-      {/* Barra de búsqueda */}
       <SearchBar
         placeholder="Buscar usuario"
         onChange={(e) => setSearchText(e.target.value)}
       />
 
-      {/* Tabs para mostrar la lista de usuarios */}
       <Tabs defaultActiveKey="1">
         <TabPane
           tab={
@@ -235,7 +325,6 @@ const Usuarios = ({ activos, rol }) => {
           }
           key="1"
         >
-          {/* Lista de usuarios */}
           <List
             grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 3 }}
             dataSource={filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
@@ -244,15 +333,26 @@ const Usuarios = ({ activos, rol }) => {
                 <StyledCard
                   title={item.nombre}
                   extra={
-                    <Tooltip title={activos ? "Eliminar Usuario" : "Restaurar Usuario"}>
-                      <StyledButton
-                        type={activos ? "danger" : "primary"}
-                        icon={activos ? <DeleteOutlined /> : <UndoOutlined />}
-                        onClick={() => showConfirm(item._id, item.nombre)}
+                    <Space size={16}>
+                      <Tooltip title="Editar Usuario">
+                      <GreenButton
+                        icon={<EditOutlined />}
+                        onClick={() => showEditModal(item)}
+                        
                       >
-                        {activos ? "Eliminar" : "Restaurar"}
-                      </StyledButton>
-                    </Tooltip>
+                        Editar
+                        </GreenButton>
+                      </Tooltip>
+                      <Tooltip title={activos ? "Eliminar Usuario" : "Restaurar Usuario"}>
+                        <StyledButton
+                          type={activos ? "danger" : "primary"}
+                          icon={activos ? <DeleteOutlined /> : <UndoOutlined />}
+                          onClick={() => showConfirm(item._id, item.nombre)}
+                        >
+                          {activos ? "Eliminar" : "Restaurar"}
+                        </StyledButton>
+                      </Tooltip>
+                    </Space>
                   }
                 >
                   <Avatar
@@ -271,7 +371,6 @@ const Usuarios = ({ activos, rol }) => {
               </List.Item>
             )}
           />
-          {/* Paginación */}
           <StyledPagination
             current={currentPage}
             total={filteredData.length}
@@ -284,13 +383,65 @@ const Usuarios = ({ activos, rol }) => {
         </TabPane>
       </Tabs>
 
-      {/* Modal para crear nuevo usuario */}
       <Signin
         visible={modalVisible}
         onCancel={hideModal}
         rol={rol}
         onUserCreated={consultarAPI}
       />
+
+      {/* Modal para editar usuario */}
+      <Modal
+  visible={editModalVisible}
+  onCancel={hideEditModal}
+  onOk={() => form.submit()} // Esto debería estar bien si la referencia a `form` es correcta
+  title={`Editar Usuario: ${selectedUser?.nombre}`}
+  centered
+      >
+        <Form
+        form={form}
+        key={selectedUser ? selectedUser._id : 'form'}
+        onFinish={handleEditUser}
+        initialValues={{
+          nombre: selectedUser?.nombre,
+          email: selectedUser?.email,
+          rol: selectedUser?.rol,
+        }}
+        >
+          <Form.Item name="nombre" label="Nombre" rules={[{ required: true, message: 'Por favor ingresa el nombre del usuario' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Por favor ingresa el email del usuario' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+                name="rol"
+                label="Rol"
+                rules={[{ required: true, message: 'Por favor selecciona un rol' }]}
+              >
+                <Select
+                  placeholder="Selecciona un rol"
+                  allowClear
+                >
+                  <Select.Option value="super">Super</Select.Option>
+                  <Select.Option value="admin">Admin</Select.Option>
+                  <Select.Option value="usuario">Usuario</Select.Option>
+                </Select>
+              </Form.Item>
+
+          <Form.Item label="Foto de perfil">
+            <Upload
+              listType="picture"
+              maxCount={1}
+              fileList={fileList}
+              onChange={handleFileChange}
+              beforeUpload={() => false}
+            >
+              <Button icon={<UploadOutlined />}>Subir Foto</Button>
+            </Upload>
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };
